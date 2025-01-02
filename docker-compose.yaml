@@ -1,0 +1,35 @@
+services:
+  db:
+    image: "mysql:8.4"
+    restart: "unless-stopped"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+      - "./.sql_data:/var/lib/mysql"
+    ports:
+      - "33060:3306"
+  app:
+    build:
+      context: .
+      no_cache: true
+    container_name: pag_app
+    command: /bin/sh -c "php artisan migrate --force && apache2-foreground"
+    restart: "unless-stopped"
+    environment:
+      APP_DEBUG: ${APP_DEBUG}
+      APP_KEY: ${APP_KEY}
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:80"
+    depends_on:
+      db:
+        condition: service_started
+        restart: true
