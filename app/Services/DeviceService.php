@@ -23,7 +23,7 @@ class DeviceService {
     ]) : LengthAwarePaginator{
         return $this->deviceRepository->getDevicesForUser($user, true, $meta['page'], $meta['per_page']);
     }
-    public function createUserAndAttachToUser(DeviceRequest $payload, User $user): Device {
+    public function createDeviceAndAttachToUser(DeviceRequest $payload, User $user): Device {
         $data = $payload->validated();
         $data['device_unique_id'] = $data['imei'];
         unset ($data['imei']);

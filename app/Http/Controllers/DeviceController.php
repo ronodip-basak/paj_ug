@@ -34,6 +34,6 @@ class DeviceController extends Controller
     }
 
     public function store(DeviceRequest $req){
-        return response(new DeviceResponse($this->deviceService->createUserAndAttachToUser($req, $req->user())), 201);
+        return response(new DeviceResponse($this->deviceService->createDeviceAndAttachToUser($req, $req->user())), 201);
     }
 }
